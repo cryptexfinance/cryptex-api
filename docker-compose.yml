@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  api:
+    build: ./api
+    command: "python3 -m gunicorn -b 0.0.0.0 --workers=2 api:new_app"
+    expose:
+      - 8000
+    environment:
+      INFURA_KEY: ""
+  nginx:
+    build: ./nginx
+    ports:
+      - 8000:80
+    depends_on:
+      - api
