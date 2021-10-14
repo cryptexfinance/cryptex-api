@@ -1,7 +1,7 @@
 from web3 import Web3
 import logging
 
-from api.models.contract import Contract
+from models.contract import Contract
 
 
 class Web3Controller:
