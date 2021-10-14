@@ -11,4 +11,5 @@ After the service is running, the following endpoints will become available:
 their respective total supply values.
 
 ## Changelog
-1.0.0 - Initial API
+* 1.0.1 - Fix paths
+* 1.0.0 - Initial API
