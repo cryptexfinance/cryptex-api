@@ -3,17 +3,11 @@ from flask import abort
 import os
 
 from controllers.web3_controller import Web3Controller
-from models.contract import Contract
-
+from static.contracts import CONTRACTS
 
 INFURA_KEY = "INFURA_KEY"
 
-CONTRACTS = {
-    "tcap": Contract.tcap,
-    "ctx": Contract.ctx,
-}
-
-
+# Separate the /cmc route as CoinMarketCap requires _only_ totalSupply in raw/non-JSON format
 cmc_api = Blueprint("api", __name__, url_prefix="/cmc")
 
 
