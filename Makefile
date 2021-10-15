@@ -1,5 +1,5 @@
 run-debug-server:
-	FLASK_APP=api FLASK_ENV=development python3 -m flask run
+	FLASK_APP=api FLASK_ENV=development python3 -m flask run api
 
 run-server:
 	gunicorn --workers=2
