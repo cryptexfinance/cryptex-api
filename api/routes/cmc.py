@@ -11,7 +11,7 @@ INFURA_KEY = "INFURA_KEY"
 cmc_api = Blueprint("api", __name__, url_prefix="/cmc")
 
 
-@cmc_api.route("/tokens/<token>/total-supply", methods=["GET"])
+@cmc_api.route("/tokens/<token>", methods=["GET"])
 def cmc_total_supply(token: str) -> str:
     """
     Returns total supply of a token for CoinMarketCap
