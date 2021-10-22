@@ -1,11 +1,11 @@
-from flask import Blueprint
-from flask import abort
 import os
 
-from controllers.web3_controller import Web3Controller
-from static.contracts import CONTRACTS
+from flask import Blueprint
+from flask import abort
 
-from . import INFURA_KEY
+from controllers.cmc_controller import CMCController
+from routes import INFURA_KEY
+from static.contracts import CONTRACTS
 
 # Separate the /cmc route as CoinMarketCap requires _only_ totalSupply in raw/non-JSON format
 cmc_api = Blueprint("api", __name__, url_prefix="/cmc")
@@ -18,13 +18,14 @@ def cmc_total_supply(token: str) -> str:
     :param token: Token to get total supply for, either CTX or TCAP
     :return: Total supply
     """
+    controller = CMCController.infura(
+        project_id=os.environ.get(INFURA_KEY),
+    )
+
     try:
-        controller = Web3Controller.infura(
-            project_id=os.environ.get(INFURA_KEY),
-            contract=CONTRACTS[token]()
-        )
+        contract = CONTRACTS[token]()
     except KeyError:
         abort(404)
         raise Exception(f"Unable to get total supply for token '{token}'.")
 
-    return controller.get_total_supply()
+    return controller.get_total_supply(contract=contract)
