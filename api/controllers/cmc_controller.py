@@ -1,4 +1,4 @@
-from common.common import Common
+from controllers.common.common import Common
 from controllers.base_controller import BaseController
 from models.contract import Contract
 from models.loaded_contract import LoadedContract

@@ -8,7 +8,7 @@ from routes import INFURA_KEY
 from static.contracts import CONTRACTS
 
 # Separate the /cmc route as CoinMarketCap requires _only_ totalSupply in raw/non-JSON format
-cmc_api = Blueprint("api", __name__, url_prefix="/cmc")
+cmc_api = Blueprint("cmc_api", __name__, url_prefix="/cmc")
 
 
 @cmc_api.route("/tokens/<token>", methods=["GET"])

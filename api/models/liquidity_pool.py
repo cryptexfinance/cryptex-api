@@ -1,4 +1,4 @@
-from contract import Contract
+from models.contract import Contract
 
 
 class LiquidityPool(Contract):

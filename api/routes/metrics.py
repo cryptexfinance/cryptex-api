@@ -7,7 +7,7 @@ from controllers.metrics_controller import MetricsController
 from routes import INFURA_KEY
 from static.contracts import CONTRACTS
 
-metrics_api = Blueprint("api", __name__, url_prefix="/metrics")
+metrics_api = Blueprint("metrics_api", __name__, url_prefix="/metrics")
 
 
 @metrics_api.route("/tokens/<token>/metrics", methods=["GET"])
