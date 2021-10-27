@@ -1,19 +1,23 @@
-from models.loaded_contract import LoadedContract
+from models.prepared_contract import PreparedContract
 
 
 class Common:
 
     @staticmethod
-    def get_total_supply(loaded_contract: LoadedContract) -> int:
+    def get_total_supply(loaded_contract: PreparedContract, should_convert_wei: bool) -> int:
         """
         Queries the contract for the total supply
+        :param loaded_contract: PreparedContract to get totalSupply for
+        :param should_convert_wei: Whether or not the total supply should be converted from wei to ether
         :return: Total supply of the specified token
         """
 
-        total_supply_raw = loaded_contract.contract.functions.totalSupply().call()
-        total_supply = total_supply_raw // loaded_contract.decimals
+        total_supply = loaded_contract.contract.functions.totalSupply().call()
 
-        return total_supply
+        if should_convert_wei:
+            total_supply = Common.wei_to_ether(total_supply)
+
+        return int(total_supply)
 
     @staticmethod
     def wei_to_ether(wei: int) -> float:
@@ -22,4 +26,4 @@ class Common:
         :param wei: Amount in wei
         :return: Amount in ether
         """
-        return wei / 1e18
+        return wei // 1e18

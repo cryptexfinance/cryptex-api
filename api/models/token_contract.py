@@ -1,4 +1,4 @@
-class Contract:
+class TokenContract:
     """
     Ethereum smart contract containing address and ABI
     """

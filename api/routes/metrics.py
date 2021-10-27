@@ -19,10 +19,10 @@ def get_metrics(token: str) -> dict:
     pass
 
 
-@metrics_api.route("/tokens/<token>/metrics/apy", methods=["GET"])
-def get_apy(token: str) -> dict:
+@metrics_api.route("/tokens/<token>/apy", methods=["GET"])
+def get_apy(token: str) -> str:
     """
-    :param token: Token to get stakign APY for, either CTX or TCAP
+    :param token: Token to get staking APY for, either CTX or TCAP
     :return: APY percentage for the token as an int (eg. 28 for 28%)
     """
     controller = MetricsController.infura(
@@ -35,4 +35,5 @@ def get_apy(token: str) -> dict:
         abort(404)
         raise Exception(f"Unable to get total supply for token '{token}'.")
 
-    return controller.get_apy(contract=contract)
+    apy = controller.get_apy(contract=contract)
+    return str(apy)

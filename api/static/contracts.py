@@ -1,6 +1,6 @@
-from models.contract import Contract
+from models.token_contract import TokenContract
 
 CONTRACTS = {
-    "tcap": Contract.tcap,
-    "ctx": Contract.ctx,
+    "tcap": TokenContract.tcap,
+    "ctx": TokenContract.ctx,
 }

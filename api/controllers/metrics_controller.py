@@ -2,17 +2,17 @@ import logging
 
 from controllers.common.common import Common
 from controllers.base_controller import BaseController
-from models.contract import Contract
-from models.liquidity_pool import LiquidityPool
-from models.loaded_contract import LoadedContract
+from models.token_contract import TokenContract
+from models.staking_contract import StakingContract
+from models.prepared_contract import PreparedContract
 
 
 class MetricsController(BaseController):
     STAKING_CONTRACTS = {
-        "ctx": LiquidityPool.ctx_weth
+        "ctx": StakingContract.ctx
     }
 
-    def get_apy(self, contract: Contract) -> int:
+    def get_apy(self, contract: TokenContract) -> int:
         """
         Gets the current APY for a token based on its corresponding liquidity pool contract, eg. ctx/weth LP
         :param contract: Token contract to get current staking APY for
@@ -21,15 +21,18 @@ class MetricsController(BaseController):
 
         try:
             staking_contract = self.STAKING_CONTRACTS[contract.name]()
-            loaded_staking_contract = LoadedContract.load_contract(
+            loaded_staking_contract = PreparedContract.load_contract(
                 web3=self._web3,
                 contract=staking_contract
             )
         except KeyError as e:  # TODO: Raise Exception
-            logging.error(f"Unable to load contract: {contract.name}!")
+            logging.error(f"Token '{contract.name}' does not support staking!")
             raise e
 
-        staking_contract_total_supply = Common.get_total_supply(loaded_contract=loaded_staking_contract)
+        staking_contract_total_supply = Common.get_total_supply(
+            loaded_contract=loaded_staking_contract,
+            should_convert_wei=False
+        )
         apy = self._calculate_apy(total_supply=staking_contract_total_supply)
 
         return apy
@@ -43,6 +46,5 @@ class MetricsController(BaseController):
         """
         six_month_ctx_reward_amount = 60000
         total_staked = Common.wei_to_ether(wei=total_supply)
-
         apy = round(((2 * six_month_ctx_reward_amount) / total_staked) * 100)
         return apy
