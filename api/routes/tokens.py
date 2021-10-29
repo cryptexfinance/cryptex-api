@@ -13,13 +13,14 @@ from routes import INFURA_KEY
 from static.contracts import CONTRACTS
 from models.token_contract import TokenContract
 
-metrics_api = Blueprint("metrics_api", __name__, url_prefix="/tokens")
+tokens_api = Blueprint("tokens_api", __name__, url_prefix="/tokens")
+
 
 class MetricsKeys:
     TOTAL_SUPPLY = "total_supply"
     APY_PERCENTAGE = "apy_percentage"
 
-@metrics_api.route("/<token>", methods=["GET"])
+@tokens_api.route("/<token>", methods=["GET"])
 def get_all_metrics(token: str) -> Response:
     """
     :param token: Token to get metrics for, either CTX or TCAP
@@ -45,10 +46,11 @@ def get_all_metrics(token: str) -> Response:
         metrics
     )
 
-@metrics_api.route("/<token>/apy", methods=["GET"])
+
+@tokens_api.route("/<token>/apy", methods=["GET"])
 def get_apy(token: str) -> Response:
     """
-    :param token: Token to get staking APY for, either CTX or TCAP
+    :param token: Token to get staking APY for. Only CTX is supported
     :return: JSON response containing the raw APY percentage
     """
     controller = MetricsController.infura(
@@ -65,7 +67,7 @@ def get_apy(token: str) -> Response:
     return jsonify({MetricsKeys.APY_PERCENTAGE: apy})
 
 
-@metrics_api.route("/<token>/total-supply", methods=["GET"])
+@tokens_api.route("/<token>/total-supply", methods=["GET"])
 def get_total_supply(token: str) -> Union[str, Response]:
     """
     :param token: Token to get total supply for, either CTX or TCAP

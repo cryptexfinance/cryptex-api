@@ -19,18 +19,10 @@ class MetricsController(BaseController):
         :return: APY percentage as an int, eg. 28 for 28%
         """
 
-        try:
-            staking_contract = self.STAKING_CONTRACTS[contract.name]()
-            loaded_staking_contract = PreparedContract.load_contract(
-                web3=self._web3,
-                contract=staking_contract
-            )
-        except KeyError as e:  # TODO: Raise Exception
-            logging.error(f"Token '{contract.name}' does not support staking!")
-            raise e
+        staking_contract = self._get_staking_contract(contract=contract)
 
         staking_contract_total_supply = Common.get_total_supply(
-            loaded_contract=loaded_staking_contract,
+            loaded_contract=staking_contract,
             should_convert_wei=False
         )
         apy = self._calculate_apy(total_supply=staking_contract_total_supply)
@@ -65,3 +57,19 @@ class MetricsController(BaseController):
         total_staked = Common.wei_to_ether(wei=total_supply)
         apy = round(((2 * six_month_ctx_reward_amount) / total_staked) * 100)
         return apy
+
+    def _get_staking_contract(self, contract: TokenContract) -> PreparedContract:
+        """
+        Gets a staking contract for a given token contract
+        :param contract: Contract to get the staking contract for
+        :return: PreparedContract for the staking contract
+        """
+        try:
+            staking_contract = self.STAKING_CONTRACTS[contract.name]()
+            return PreparedContract.load_contract(
+                web3=self._web3,
+                contract=staking_contract
+            )
+        except KeyError as e:  # TODO: Raise Exception
+            logging.error(f"Token '{contract.name}' does not support staking!")
+            raise e
