@@ -46,21 +46,6 @@ class MetricsController(BaseController):
 
         return total_supply_raw
 
-    # TODO: This is likely not returning the proper value
-    def get_reward_rate_for_duration(self, contract: TokenContract) -> int:
-        """
-        Queries the contract for the total supply
-        :return: Total supply of the specified token
-        """
-
-        staking_contract = self._get_staking_contract(contract=contract)
-
-        reward_rate_for_duration = Common.get_reward_for_duration(
-            loaded_contract=staking_contract
-        )
-
-        return reward_rate_for_duration
-
     @staticmethod
     def _calculate_apy(total_supply: int):
         """
