@@ -11,9 +11,13 @@ from flask import request
 from controllers.metrics_controller import MetricsController
 from routes import INFURA_KEY
 from static.contracts import CONTRACTS
+from models.token_contract import TokenContract
 
 metrics_api = Blueprint("metrics_api", __name__, url_prefix="/tokens")
 
+class MetricsKeys:
+    TOTAL_SUPPLY = "total_supply"
+    APY_PERCENTAGE = "apy_percentage"
 
 @metrics_api.route("/<token>", methods=["GET"])
 def get_all_metrics(token: str) -> Response:
@@ -26,20 +30,20 @@ def get_all_metrics(token: str) -> Response:
     )
 
     try:
-        contract = CONTRACTS[token]()
+        contract: TokenContract = CONTRACTS[token]()
     except KeyError:
         abort(404)
         raise Exception(f"Unable to get metrics for token '{token}'.")
 
-    apy = controller.get_apy(contract=contract)
-    total_supply = controller.get_total_supply(contract=contract)
-    return jsonify(
-        {
-            "apy_percentage": apy,
-            "total_supply": total_supply
-        }
-    )
+    metrics = {}
 
+    if contract.can_stake:
+        metrics[MetricsKeys.APY_PERCENTAGE] = controller.get_apy(contract=contract)
+
+    metrics[MetricsKeys.TOTAL_SUPPLY] = controller.get_total_supply(contract=contract)
+    return jsonify(
+        metrics
+    )
 
 @metrics_api.route("/<token>/apy", methods=["GET"])
 def get_apy(token: str) -> Response:
@@ -58,7 +62,7 @@ def get_apy(token: str) -> Response:
         raise Exception(f"Unable to get staking APY for token '{token}'.")
 
     apy = controller.get_apy(contract=contract)
-    return jsonify({"apy_percentage": apy})
+    return jsonify({MetricsKeys.APY_PERCENTAGE: apy})
 
 
 @metrics_api.route("/<token>/total-supply", methods=["GET"])
@@ -82,4 +86,4 @@ def get_total_supply(token: str) -> Union[str, Response]:
 
     if is_cmc_request.lower() == "true":
         return str(total_supply)
-    return jsonify({"total_supply": total_supply})
+    return jsonify({MetricsKeys.TOTAL_SUPPLY: total_supply})
