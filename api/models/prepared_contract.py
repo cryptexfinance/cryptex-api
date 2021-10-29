@@ -4,8 +4,8 @@ from web3 import Web3
 from web3.contract import Contract as W3Contract
 from web3.exceptions import ABIFunctionNotFound
 
-from models.token_contract import TokenContract
 from models.staking_contract import StakingContract
+from models.token_contract import TokenContract
 
 
 class PreparedContract:

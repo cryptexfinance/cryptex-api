@@ -1,10 +1,10 @@
 import logging
 
-from controllers.common.common import Common
 from controllers.base_controller import BaseController
-from models.token_contract import TokenContract
-from models.staking_contract import StakingContract
+from controllers.common.common import Common
 from models.prepared_contract import PreparedContract
+from models.staking_contract import StakingContract
+from models.token_contract import TokenContract
 
 
 class MetricsController(BaseController):
