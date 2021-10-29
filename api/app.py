@@ -1,12 +1,12 @@
 from flask import Flask
 
-from routes.cmc import cmc_api
+from routes.tokens import tokens_api
 
 
 def create_app():
     app = Flask(__name__)
 
-    app.register_blueprint(cmc_api)
+    app.register_blueprint(tokens_api)
 
     return app
 
