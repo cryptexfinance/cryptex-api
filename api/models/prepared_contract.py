@@ -20,7 +20,7 @@ class PreparedContract:
         Creates a Web3 Contract from a Contract
         :param web3: Web3 provider
         :param contract: Contract to load data from
-        :return: LoadedContract, containing usable contract and decimals
+        :return: PreparedContract, containing usable contract and decimals
         """
 
         # noinspection PyTypeChecker
