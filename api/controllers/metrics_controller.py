@@ -37,6 +37,23 @@ class MetricsController(BaseController):
 
         return apy
 
+    def get_total_supply(self, contract: TokenContract) -> int:
+        """
+        Queries the contract for the total supply
+        :return: Total supply of the specified token
+        """
+
+        loaded_contract = PreparedContract.load_contract(
+            web3=self._web3,
+            contract=contract
+        )
+        total_supply_raw = Common.get_total_supply(
+            loaded_contract=loaded_contract,
+            should_convert_wei=True
+        )
+
+        return total_supply_raw
+
     @staticmethod
     def _calculate_apy(total_supply: int):
         """
