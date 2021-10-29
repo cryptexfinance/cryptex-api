@@ -19,6 +19,15 @@ tokens_api = Blueprint("tokens_api", __name__, url_prefix="/tokens")
 class MetricsKeys:
     TOTAL_SUPPLY = "total_supply"
     APY_PERCENTAGE = "apy_percentage"
+    STAKING_TOKEN = "staking_token"
+    REWARDS_TOKEN = "rewards_token"
+    WAIT_TIME = "wait_time"
+    PERIOD_FINISH = "period_finish"
+    REWARD_RATE = "reward_rate"
+    REWARDS_DURATION = "rewards_duration"
+    LAST_UPDATE_TIME = "last_update_time"
+    REWARD_PER_TOKEN_STORED = "reward_per_token_stored"
+
 
 @tokens_api.route("/<token>", methods=["GET"])
 def get_all_metrics(token: str) -> Response:
@@ -40,6 +49,7 @@ def get_all_metrics(token: str) -> Response:
 
     if contract.can_stake:
         metrics[MetricsKeys.APY_PERCENTAGE] = controller.get_apy(contract=contract)
+        metrics[MetricsKeys.REWARD_RATE] = controller.get_reward_rate_for_duration(contract=contract)
 
     metrics[MetricsKeys.TOTAL_SUPPLY] = controller.get_total_supply(contract=contract)
     return jsonify(
