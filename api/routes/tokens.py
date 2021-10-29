@@ -1,26 +1,28 @@
-import logging
 import os
 from typing import Union
 
 from flask import Blueprint
+from flask import Response
 from flask import abort
 from flask import jsonify
-from flask import Response
 from flask import request
 
 from controllers.metrics_controller import MetricsController
+from models.token_contract import TokenContract
 from routes import INFURA_KEY
 from static.contracts import CONTRACTS
-from models.token_contract import TokenContract
 
 tokens_api = Blueprint("tokens_api", __name__, url_prefix="/tokens")
+
+BASE_ROUTE = "/<token>"
 
 
 class MetricsKeys:
     TOTAL_SUPPLY = "total_supply"
     APY_PERCENTAGE = "apy_percentage"
 
-@tokens_api.route("/<token>", methods=["GET"])
+
+@tokens_api.route(BASE_ROUTE, methods=["GET"])
 def get_all_metrics(token: str) -> Response:
     """
     :param token: Token to get metrics for, either CTX or TCAP
@@ -47,7 +49,7 @@ def get_all_metrics(token: str) -> Response:
     )
 
 
-@tokens_api.route("/<token>/apy", methods=["GET"])
+@tokens_api.route(f"{BASE_ROUTE}/apy", methods=["GET"])
 def get_apy(token: str) -> Response:
     """
     :param token: Token to get staking APY for. Only CTX is supported
@@ -67,7 +69,7 @@ def get_apy(token: str) -> Response:
     return jsonify({MetricsKeys.APY_PERCENTAGE: apy})
 
 
-@tokens_api.route("/<token>/total-supply", methods=["GET"])
+@tokens_api.route(f"{BASE_ROUTE}/total-supply", methods=["GET"])
 def get_total_supply(token: str) -> Union[str, Response]:
     """
     :param token: Token to get total supply for, either CTX or TCAP
