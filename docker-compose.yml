@@ -6,7 +6,7 @@ services:
     expose:
       - 8000
     environment:
-      INFURA_KEY: "e37c21b7a4e14c74b9719bea11d9d18f"
+      INFURA_KEY: ""
   nginx:
     build: ./nginx
     ports:
