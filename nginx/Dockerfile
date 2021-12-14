@@ -1,3 +1,6 @@
-FROM ubuntu/nginx:1.18-20.04_edge
+FROM nginx:1.21-alpine
 
-COPY nginx.conf /etc/nginx/sites-available/default
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+RUN apk update && apk add bash
