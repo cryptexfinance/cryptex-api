@@ -1,11 +1,15 @@
-FROM python:3.8.12-alpine3.14 AS builder
-WORKDIR /api
-ADD requirements.txt /api
-RUN apk add gcc musl-dev
-RUN pip install -r requirements.txt
-RUN apk update && apk add bash
+FROM python:3.8-slim-buster
 
-FROM python:3.8.12-alpine3.14
-WORKDIR /api
-ADD . /api
-COPY --from=builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
+WORKDIR /usr/src/api
+
+RUN apt-get update && apt-get upgrade
+RUN apt-get -y install gcc
+
+ENV FLASK_RUN_HOST=0.0.0.0
+#Server will reload itself on file changes if in dev mode
+ENV FLASK_ENV=development 
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+COPY . .
+
+CMD ["flask", "run"]
