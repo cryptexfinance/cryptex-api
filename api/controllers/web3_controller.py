@@ -57,3 +57,22 @@ class Web3Controller:
 
         return str(total_supply)
 
+    def get_total_market_cap(self):
+        """
+        Queries the contract for the lastest oracle answer
+        :return: Total crypto market cap
+        """
+
+        total_market_cap_raw = self._contract.functions.getLatestAnswer().call()
+
+        return str(total_market_cap_raw)
+
+    def get_tcap_price(self):
+        """
+        Queries the contract for the tcap price
+        :return: Tcap price
+        """
+
+        total_market_cap_raw = self._contract.functions.getLatestAnswer().call()
+
+        return str(total_market_cap_raw)
