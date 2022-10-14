@@ -25,7 +25,7 @@ def create_app():
             contract=Contract.ctx()
         )
 
-        return controller.get_total_supply()
+        return controller.get_total_circulating_supply_ctx()
 
     @app.route("/total-market-cap", methods=["GET"])
     def total_market_cap():
