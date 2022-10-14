@@ -101,7 +101,8 @@ class Web3Controller:
 
         total_market_cap_raw = self._contract.functions.getLatestAnswer().call()
 
-        return str(total_market_cap_raw)
+        total_market_cap  = self._web3.fromWei(total_market_cap_raw * 10000000000, "ether")
+        return str(int(total_market_cap))
 
     def get_tcap_price(self):
         """
@@ -110,5 +111,6 @@ class Web3Controller:
         """
 
         total_market_cap_raw = self._contract.functions.getLatestAnswer().call()
+        tcap_price = self._web3.fromWei(total_market_cap_raw, "ether")
 
-        return str(total_market_cap_raw)
+        return str(tcap_price)
