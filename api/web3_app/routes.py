@@ -24,4 +24,22 @@ def total_supply_ctx():
         contract=Contract.ctx()
     )
 
-    return controller.get_total_supply()
+    return controller.get_total_circulating_supply_ctx()
+
+@web3_blueprint.route("/total-market-cap", methods=["GET"])
+def total_market_cap():
+    controller = Web3Controller.infura(
+        project_id=os.environ.get("INFURA_KEY"),
+        contract=Contract.tcap_oracle()
+    )
+
+    return controller.get_total_market_cap()
+
+@web3_blueprint.route("/tcap-price", methods=["GET"])
+def tcap_price():
+    controller = Web3Controller.infura(
+        project_id=os.environ.get("INFURA_KEY"),
+        contract=Contract.tcap_oracle()
+    )
+
+    return controller.get_tcap_price()
