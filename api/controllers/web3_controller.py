@@ -1,5 +1,6 @@
 from web3 import Web3
 import logging
+import requests
 
 from api.models.contract import Contract
 
@@ -9,6 +10,8 @@ _LIQUIDITY_REWARD_ADDRESS = "0xc8bb1cd417d20116387a5e0603e195ca4f3cf59a"
 _LIQUIDITY_REWARD2_ADDRESS = "0xdc4cdd5db9ee777efd891690dc283638cb3a5f94"
 _MULTISIG_ADDRESS = "0xa70b638b70154edfcbb8dbbbd04900f328f32c35"
 _TREASURY_ADDRESS = "0xa54074b2cc0e96a43048d4a68472f7f046ac0da8"
+
+_GITCOIN_PRICE_API_URL = "https://api.coingecko.com/api/v3/simple/price"
 
 class Web3Controller:
     """
@@ -95,7 +98,7 @@ class Web3Controller:
 
     def get_total_market_cap(self):
         """
-        Queries the contract for the lastest oracle answer
+        Queries the oracle contract for the lastest oracle answer
         :return: Total crypto market cap
         """
 
@@ -106,7 +109,7 @@ class Web3Controller:
 
     def get_tcap_price(self):
         """
-        Queries the contract for the tcap price
+        Queries the oracle contract for the tcap price
         :return: Tcap price
         """
 
@@ -114,3 +117,27 @@ class Web3Controller:
         tcap_price = self._web3.fromWei(total_market_cap_raw, "ether")
 
         return str(tcap_price)
+
+    def get_tcap_market_price(self):
+        """
+        Queries the coingecko api to get the market price
+        :return: Tcap Market price
+        """
+        
+        params =  {
+            "ids": "total-crypto-market-cap-token",  
+            "vs_currencies": "usd", 
+            "include_last_updated_at": True, 
+            "precision": 10    
+        }
+        
+        r = requests.get(_GITCOIN_PRICE_API_URL, params=params)
+        if r.status_code == 200:
+            resp = r.json()
+            if not resp.get("total-crypto-market-cap-token", None) is None:
+                usd_price = resp["total-crypto-market-cap-token"]
+                return str(usd_price["usd"])
+            else:        
+                return "Value not found"
+        else:
+            return "Error " + r.status_code

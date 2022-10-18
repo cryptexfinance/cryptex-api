@@ -47,6 +47,15 @@ def create_app():
 
         return controller.get_tcap_price()
 
+    @app.route("/tcap-market-price", methods=["GET"])
+    def tcap_market_price():
+        controller = Web3Controller.infura(
+            project_id=os.environ.get("INFURA_KEY"),
+            contract=Contract.tcap_oracle()
+        )
+
+        return controller.get_tcap_market_price()    
+
     return app
 
 
