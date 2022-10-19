@@ -29,7 +29,7 @@ def create_app():
 
         return controller.get_total_circulating_supply_ctx()
 
-    @app.route("/total-market-cap", methods=["GET"])
+    @app.route("/total-crypto-market-cap", methods=["GET"])
     def total_market_cap():
         controller = Web3Controller.infura(
             project_id=os.environ.get("INFURA_KEY"),
@@ -38,7 +38,7 @@ def create_app():
 
         return controller.get_total_market_cap()
 
-    @app.route("/tcap-price", methods=["GET"])
+    @app.route("/tcap-oracle-price", methods=["GET"])
     def tcap_price():
         controller = Web3Controller.infura(
             project_id=os.environ.get("INFURA_KEY"),
