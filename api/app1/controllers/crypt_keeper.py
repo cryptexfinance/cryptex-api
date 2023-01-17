@@ -198,6 +198,7 @@ class CryptKeeperController:
                     })
             except SQLAlchemyError as ex:
                 logging.error(f"Updating Cryp Keeper: {ex}")
+                db.session.close()
                 self._errors.append({
                         "field": "unknown",
                         "message": "An unkown error has ocurred"
