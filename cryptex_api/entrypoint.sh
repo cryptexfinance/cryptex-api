@@ -19,4 +19,4 @@ python manage.py migrate
 
 # Start server
 echo "Starting server"
-supervisord -n
+gunicorn cryptex_api.wsgi:application --bind 0.0.0.0:8005
