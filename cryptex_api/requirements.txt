@@ -1,0 +1,22 @@
+Django==4.1
+djangorestframework===3.14.0
+psycopg2-binary
+markdown
+django-filter
+django-oauth-toolkit
+django-cors-headers
+ipython==7.13
+python-decouple==3.7
+pillow
+lru-dict==1.1.8
+eth-abi==2.1.1; python_version >= '3.6' and python_version < '4'
+eth-account==0.5.6; python_version >= '3.6' and python_version < '4'
+eth-hash[pycryptodome]==0.3.2; python_version >= '3.5' and python_version < '4'
+eth-keyfile==0.5.1
+eth-keys==0.3.3
+eth-rlp==0.2.1; python_version >= '3.6' and python_version < '4'
+eth-typing==2.2.2; python_version >= '3.5' and python_version < '4'
+eth-utils==1.10.0; python_version >= '3.5' and python_version < '4' and python_full_version != '3.5.2'
+web3
+requests
+werkzeug

@@ -1,5 +1,5 @@
-# Cryptex CoinMarketCap API
-A simple API for supplying CoinMarketCap with total supply information for the CTX and TCAP tokens.
+# Cryptex API
+Cryptex API provides endpoints to tcap and ctx tokens prices and total supply .
 
 [Cryptex.Finance](https://cryptex.finance)
 
@@ -7,9 +7,9 @@ A simple API for supplying CoinMarketCap with total supply information for the C
 First, bring up the service: `docker-compose up -d`.
 
 After the service is running, the following endpoints will become available: 
-`/total-supply-tcap` and `/total-supply-ctx`. Make a GET request to either to get
-their respective total supply values.
-
-## Changelog
-* 1.0.1 - Fix paths
-* 1.0.0 - Initial API
+    
+    - `/total-supply-tcap/` 
+    - `/total-supply-ctx/`
+    - `/tcap-oracle-price/`
+    - `/tcap-market-price/`
+    - `/total-crypto-market-cap/`

@@ -1,0 +1,16 @@
+FROM python:3.8-slim-bullseye
+
+RUN apt-get update && \
+    apt-get -y install gcc mono-mcs && \
+    rm -rf /var/lib/apt/lists/*
+
+# setup project code
+ENV INSTALL_PATH /usr/src/cryptex-api/cryptex_api
+WORKDIR $INSTALL_PATH
+COPY . .
+
+ENV DJANGO_SETTINGS_MODULE cryptex_api.settings
+
+EXPOSE 8005
+
+ENTRYPOINT $INSTALL_PATH'/entrypoint-dev.sh'
