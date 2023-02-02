@@ -27,6 +27,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = ["https://api.cryptex.finance",]
 
 # Application definition
 
