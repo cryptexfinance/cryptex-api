@@ -9,8 +9,6 @@ WORKDIR $INSTALL_PATH
 COPY . .
 
 ENV DJANGO_SETTINGS_MODULE cryptex_api.settings
-ENV STATIC_ROOT /usr/src/cryptex-api/cryptex_api/static/
-ENV MEDIA_ROOT /usr/src/cryptex-api/media/
 
 RUN mkdir /usr/src/cryptex-api/media/
 RUN chown -R www-data:www-data /usr/src/cryptex-api/media/
