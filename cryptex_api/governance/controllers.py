@@ -4,11 +4,12 @@ from web3 import Web3
 from django.db import DatabaseError
 from werkzeug.utils import secure_filename
 from PIL import Image
+from django.conf import settings
 from .models import CryptKeeper
 from . import validations
 
 
-UPLOAD_IMAGES_FOLDER = "/usr/src/cryptex-api/cryptex_api/images/"
+UPLOAD_IMAGES_FOLDER = settings.MEDIA_ROOT
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 _INFURA_KEY = "INFURA_KEY"
