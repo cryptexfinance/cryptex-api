@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,8 +30,12 @@ ALLOWED_HOSTS = ["*"]
 
 CSRF_TRUSTED_ORIGINS = ["https://api.cryptex.finance", "https://test-api.cryptex.finance",]
 
-# Application definition
+ADMINS = [('Jorge Destephen', 'jorge@cryptex.finance'), ('Jorge Destephen', 'jdestephen07@gmail.com'), ]
+MANAGERS = ADMINS
+DEFAULT_FROM_EMAIL = config('EMAIL_HOST')
+SERVER_EMAIL = 'api-error@app.consultoraisis.com'
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -165,77 +170,87 @@ MEDIA_ROOT = os.path.join(Path(BASE_DIR).parent, 'images/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = 465
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-"""  LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {message}',
-            'style': '{',
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'verbose': {
+                'format': '{levelname} {asctime} {module} {process:d} {message}',
+                'style': '{',
+            },
+            'request_verbose': {
+                'format': '{levelname} {asctime} {module} {status_code} {request} {message}',
+                'style': '{',
+            },
+            'simple': {
+                'format': '{levelname} {message}',
+                'style': '{',
+            },
         },
-        'request_verbose': {
-            'format': '{levelname} {asctime} {module} {status_code} {request} {message}',
-            'style': '{',
+        'filters': {
+            'require_debug_true': {
+                '()': 'django.utils.log.RequireDebugTrue',
+            },
+            'require_debug_false': {
+                '()': 'django.utils.log.RequireDebugFalse',
+            },
         },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
+        'handlers': {
+            'console': {
+                'level': 'INFO',
+                'filters': ['require_debug_true'],
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple'
+            },
+            'cryptex_mail_admins': {
+                'level': 'WARNING',
+                'filters': ['require_debug_false'],
+                'class': 'django.utils.log.AdminEmailHandler',
+                'formatter': 'verbose'
+            },
+            'mail_admins': {
+                'level': 'ERROR',
+                'filters': ['require_debug_false'],
+                'class': 'django.utils.log.AdminEmailHandler',
+                'formatter': 'verbose'
+            },
+            'request_mail_admins': {
+                'level': 'WARNING',
+                'filters': ['require_debug_false'],
+                'class': 'django.utils.log.AdminEmailHandler',
+                'formatter': 'request_verbose'
+            }
         },
-    },
-    'filters': {
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse',
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'filters': ['require_debug_true'],
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        'order_mail_admins': {
-            'level': 'WARNING',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'formatter': 'verbose'
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'formatter': 'verbose'
-        },
-        'request_mail_admins': {
-            'level': 'WARNING',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'formatter': 'request_verbose'
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'propagate': True,
+            },
+            'cryptex.custom': {
+                'handlers': ['cryptex_mail_admins'],
+                'level': 'WARNING',
+                'propagate': True,
+            },
+            'django.request': {
+                'handlers': ['request_mail_admins'],
+                'level': 'ERROR',
+                'propagate': False,
+            },
+            'django.security.SuspiciousOperations': {
+                'handlers': ['mail_admins'],
+                'level': 'WARNING',
+                'propagate': False,
+            },
         }
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'propagate': True,
-        },
-        'orders.custom': {
-            'handlers': ['order_mail_admins'],
-            'level': 'WARNING',
-            'propagate': True,
-        },
-        'django.request': {
-            'handlers': ['request_mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'django.security.SuspiciousOperations': {
-            'handlers': ['mail_admins'],
-            'level': 'WARNING',
-            'propagate': False,
-        },
     }
-} """

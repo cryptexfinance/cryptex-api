@@ -14,6 +14,8 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 _INFURA_KEY = "INFURA_KEY"
 
+logger = logging.getLogger('sales.custom')
+
 class CryptKeeperController:
     """
     Controller class for Crypt Keepers
@@ -122,24 +124,31 @@ class CryptKeeperController:
             return ""
 
         file = files["file"]
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        filename = secure_filename(file.name)
-        if filename == "":
-            return ""
-
-        keeper_image = Image.open(file)
-        if file and self.allowed_file(filename):
-            new_name = str(uuid.uuid1())
-            extension = filename.rsplit('.', 1)[1].lower()
-            file_path = os.path.join(UPLOAD_IMAGES_FOLDER, "{}.{}".format(new_name, extension))
+        try:
+            # If the user does not select a file, the browser submits an
+            # empty file without a filename.
+            filename = secure_filename(file.name)
+            if filename == "":
+                return ""
             
-            keeper_image.save(file_path, extension)
-            return "images/{}.{}".format(new_name, extension)
-        else:
+            keeper_image = Image.open(file)
+            if file and self.allowed_file(filename):
+                new_name = str(uuid.uuid1())
+                extension = filename.rsplit('.', 1)[1].lower()
+                file_path = os.path.join(UPLOAD_IMAGES_FOLDER, "{}.{}".format(new_name, extension))
+                
+                keeper_image.save(file_path, extension)
+                return "images/{}.{}".format(new_name, extension)
+            else:
+                self._errors.append({
+                    "field": "image",
+                    "message": "File type is not valid."
+                })    
+        except Exception as ex:
+            logger.error(f"Error saving image: {ex}")
             self._errors.append({
                 "field": "image",
-                "message": "File type is not valid."
+                "message": "An error occurred trying to save the image."
             })    
 
         return ""   
@@ -198,17 +207,17 @@ class CryptKeeperController:
                         "errors": list()
                     })
             except CryptKeeper.DoesNotExist:
-                logging.error(f"Cryp keeper does not exists")
+                logger.error(f"Crypt. keeper does not exists: {data}")
                 self._errors.append({
                         "field": "unknown",
-                        "message": "Cryp keeper does not exists."
+                        "message": "Crypt. keeper does not exists."
                     })
                 return dict({
                         "status": "error",
                         "errors": list()
                     })          
             except DatabaseError as ex:
-                logging.error(f"Updating Cryp Keeper: {ex}")
+                logger.error(f"Updating Cryp Keeper Database error: {ex}")
                 self._errors.append({
                         "field": "unknown",
                         "message": "An unkown error has ocurred"
