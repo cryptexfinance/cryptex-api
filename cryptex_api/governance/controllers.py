@@ -124,32 +124,35 @@ class CryptKeeperController:
             return ""
 
         file = files["file"]
-        try:
-            # If the user does not select a file, the browser submits an
-            # empty file without a filename.
-            filename = secure_filename(file.name)
-            if filename == "":
-                return ""
+        # try:
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        filename = secure_filename(file.name)
+        if filename == "":
+            return ""
+        
+        keeper_image = Image.open(file)
+        if file and self.allowed_file(filename):
+            new_name = str(uuid.uuid1())
+            extension = filename.rsplit('.', 1)[1].lower()
+            file_path = os.path.join(UPLOAD_IMAGES_FOLDER, "{}.{}".format(new_name, extension))
             
-            keeper_image = Image.open(file)
-            if file and self.allowed_file(filename):
-                new_name = str(uuid.uuid1())
-                extension = filename.rsplit('.', 1)[1].lower()
-                file_path = os.path.join(UPLOAD_IMAGES_FOLDER, "{}.{}".format(new_name, extension))
-                
-                keeper_image.save(file_path, extension)
-                return "images/{}.{}".format(new_name, extension)
-            else:
-                self._errors.append({
-                    "field": "image",
-                    "message": "File type is not valid."
-                })    
+            keeper_image.save(file_path, extension)
+            return "images/{}.{}".format(new_name, extension)
+        else:
+            self._errors.append({
+                "field": "image",
+                "message": "File type is not valid."
+            })
+
+        """
         except Exception as ex:
             logger.error(f"Error saving image: {ex}")
             self._errors.append({
                 "field": "image",
                 "message": "An error occurred trying to save the image."
-            })    
+            }) 
+        """       
 
         return ""   
 
